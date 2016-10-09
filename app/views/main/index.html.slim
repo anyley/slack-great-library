@@ -1,0 +1,33 @@
+nav.navbar.navbar-inverse.navbar-fixed-top
+  .container-fluid
+    .navbar-header
+      a.navbar-brand href="/" Slack Great Library
+
+    ul.nav.navbar-nav
+      - menu_items.each do |menu|
+        = menuitem menu[:name], menu[:url], session[:active_tab] == menu[:url]
+
+    ul.nav.navbar-nav.navbar-right
+      li.dropdown
+        a.dropdown-toggle data-toggle="dropdown" href="#"
+          = "#{current_user.name} (#{current_user.email})"
+          span.caret
+
+        ul.dropdown-menu
+          - User.all.each do |user|
+            - if user != current_user
+              li = link_to "#{user.name} (#{user.email})", change_user_path(user.id)
+
+      li
+        a href=destroy_user_session_path
+          span.glyphicon.glyphicon-log-in Выйти
+
+div.main-page
+  - case session[:active_tab]
+  - when our_users_path
+    = render 'users'
+  - when our_finances_path
+    = render 'finances'
+  - else our_items_path
+    = render 'items'
+

@@ -1,7 +1,7 @@
 class MainController < ApplicationController
-  FILTER_ALL = ['all', 'claims', 'purchased', 'other']
+  FILTER_ALL = ['claims', 'purchased', 'other']
   # before_action :set_current_user
-  before_action :set_filter
+  before_action :set_session_filter
 
   def index
     case session[:active_tab]
@@ -40,10 +40,10 @@ class MainController < ApplicationController
       item.reload
       current_user.reload
     end
-    # redirect_to our_items_path
+
     respond_to do |format|
       format.js do
-        @result = render_to_string partial: 'items/item', locals: {item: item, current_user: current_user}
+        @result      = render_to_string partial: 'items/item', locals: { item: item, current_user: current_user }
         @replace_tag = "#item_#{item.id}"
         render 'replace_item'
       end
@@ -60,10 +60,10 @@ class MainController < ApplicationController
       item.reload
       current_user.reload
     end
-    # redirect_to our_items_path
+
     respond_to do |format|
       format.js do
-        @result = render_to_string partial: 'items/item', locals: {item: item, current_user: current_user}
+        @result      = render_to_string partial: 'items/item', locals: { item: item, current_user: current_user }
         @replace_tag = "#item_#{item.id}"
         render 'replace_item'
       end
@@ -72,18 +72,17 @@ class MainController < ApplicationController
   end
 
   def set_user_filter
-    user_filter = params[:filter]
-    if user_filter == 'all'
-      if session[:filter].size == 4
-        session[:filter] = Set.new []
-      else
+    user_filter = params[:filter].split /[\+\-]/
+
+    case user_filter
+
+      when 'all'
         session[:filter] = Set.new FILTER_ALL
-      end
-    else
-      session[:filter] = session[:filter].to_set ^ [user_filter]
-      session[:filter].delete 'all' if session[:filter].size < 4
+      when 'reset'
+        session[:filter] = Set.new []
+      when 'claims', 'purchased', 'other'
+        session[:filter] = session[:filter].to_set ^ [user_filter]
     end
-    session[:filter] << 'all' if session[:filter].size == 3 && !session[:filter].include?('all')
 
     respond_to do |format|
       format.js do
@@ -91,13 +90,17 @@ class MainController < ApplicationController
         @result = render_to_string partial: 'main/items'
         render 'replace_main'
       end
+      format.html do
+        set_items
+        render :index
+      end
     end
   end
 
   def start_crowdfunding
     respond_to do |format|
       format.js do
-        @uuid = SecureRandom.uuid
+        @uuid   = SecureRandom.uuid
         @result = render_to_string partial: 'main/items'
         render 'replace_main'
       end
@@ -106,23 +109,19 @@ class MainController < ApplicationController
 
 
   private
-  def set_items
-    user = current_user
-    @items = []
-    if session[:filter].include? 'all'
-      @items = Item.all
-    else
-      @items += user.claim_items - user.purchase_items if session[:filter].include?('claims')
-      @items += user.purchase_items if session[:filter].include?('purchased')
-      @items += Item.all - user.claim_items - user.purchase_items if session[:filter].include?('other')
+    def set_items
+      user   = current_user
+      @items = []
+      if session[:filter].size == FILTER_ALL.size
+        @items = Item.all
+      else
+        @items += user.claim_items - user.purchase_items if session[:filter].include?('claims')
+        @items += user.purchase_items if session[:filter].include?('purchased')
+        @items += user.other_items if session[:filter].include?('other')
+      end
     end
-  end
 
-  # def set_current_user
-  #   current_user = User.find session[:current_user]['id']
-  # end
-
-  def set_filter
-    session[:filter] ||= Set.new FILTER_ALL
-  end
+    def set_session_filter
+      session[:filter] ||= Set.new FILTER_ALL
+    end
 end

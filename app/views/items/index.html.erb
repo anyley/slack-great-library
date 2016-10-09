@@ -1,17 +1,11 @@
-<p id="notice"><%= notice %></p>
-
-<h1> Покупки </h1>
-
-<p>
-  <%= link_to 'New Item', new_item_path %>
-</p>
-
-<% @items.each do |item| %>
-    <%= render 'item', item: item do %>
-        <div class="edit_back_btn_block">
-          <%= link_to 'Show', item %> |
-          <%= link_to 'Edit', edit_item_path(item) %> |
-          <%= link_to 'Destroy', item, method: :delete, data: { confirm: 'Are you sure?' } %>
-        </div>
-    <% end %>
-<% end %>
+<div id="our-items" class="panel panel-default">
+  <div class="panel-heading">
+    <%= link_to 'Добавить предложение', new_item_path, class: 'btn btn-default' %>
+    <div class="btn-group right-block">
+      <%= filter_buttons(session[:filter]) %>
+    </div>
+  </div>
+  <div id="main-content" class="panel-body" keep-scroll >
+    <%= render partial: 'items/item', collection: @items, locals: {current_user: @current_user} %>
+  </div>
+</div>

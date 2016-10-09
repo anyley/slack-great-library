@@ -7,11 +7,12 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable #, :omniauth_providers => [:github]
 
-  has_many :offers, foreign_key: :offered_by_id, class_name: 'Item'
   has_and_belongs_to_many :items
 
+  has_many :offers, foreign_key: :offered_by_id, class_name: 'Item'
+
   has_many :purchases
-  has_many :purchase_items, source: :item, through: :purchases
+  has_many :purchase_items, through: :purchases, source: :item
 
   has_many :claims
   has_many :claim_items, through: :claims, source: :item
@@ -19,11 +20,25 @@ class User < ApplicationRecord
   has_many :sended_ops, foreign_key: :sender_id, class_name: 'Operation'
   has_many :received_ops, foreign_key: :receiver_id, class_name: 'Operation'
 
-  has_many :init_campaigns, foreign_key: :initiator_id, class_name: 'Campaign'
+  has_many :self_campaigns, foreign_key: :initiator_id, class_name: 'Campaign'
+
+  # has_many :campaigns_users
+  # has_many :other_campaigns, through: :campaigns_users, source: :campaign
   has_and_belongs_to_many :campaigns
 
-
   default_scope { order :name, :email }
+
+  scope :list_requested, -> (item_id) do
+    where.not(
+        id: User.joins(:purchases).where(purchases: { item_id: item_id })
+    ).where(
+        id: User.joins(:claims).where(claims: { item_id: item_id })
+    )
+  end
+
+  def other_items
+    Item.other_items_for_user id
+  end
 
   def set_name
     self.name = email.split('@').first

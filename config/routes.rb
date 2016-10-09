@@ -8,9 +8,9 @@ Rails.application.routes.draw do
 
   root 'main#index'
   get '/our-items', to: 'main#our_items'
-  get '/our-items/set_user_filter/:filter', to: 'main#set_user_filter', as: :set_user_filter
-  get '/our-items/:item_id/claim', to: 'main#claim', as: :claim_item
-  get '/our-items/:item_id/unclaim', to: 'main#unclaim', as: :unclaim_item
+  get '/our-items/filter/:filter', to: 'main#set_user_filter', as: :set_user_filter
+  post '/our-items/:item_id/claim', to: 'main#claim', as: :claim_item
+  delete '/our-items/:item_id/claim', to: 'main#unclaim', as: :unclaim_item
 
   get '/our-users', to: 'main#our_users'
 
@@ -25,4 +25,6 @@ Rails.application.routes.draw do
   end
 
   # resources :users
+
+  resource :campaigns
 end
