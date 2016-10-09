@@ -1,4 +1,5 @@
 $(document).on 'turbolinks:load', ->
+
   class Draggable
     constructor: ->
       @drag_element = null
@@ -29,8 +30,9 @@ $(document).on 'turbolinks:load', ->
 
   draggable = new Draggable
 
+
   $('#preview').click (event) ->
-  $('#item_image').click()
+    $('#item_image').click()
 
   $('#item_image').change (event) ->
     input = event.target

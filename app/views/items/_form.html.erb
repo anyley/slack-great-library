@@ -51,7 +51,7 @@
               <tr>
                 <td class="row_title cell"> <%= f.label :offered_by, 'Предложил:' %> </td>
                 <td class="cell">
-                  <%= @current_user.name %>
+                  <%= current_user.name %>
                   <!-- %= collection_select :item, :offered_by, users, :id, :name, class: "form-control-2" % -->
                 </td>
               </tr>
