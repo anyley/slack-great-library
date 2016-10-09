@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uuid: MyString
+  item: MyString
+  users: one
+  ops: one
+  status: one
+  initiator: one
+
+two:
+  uuid: MyString
+  item: MyString
+  users: two
+  ops: two
+  status: two
+  initiator: two

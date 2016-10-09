@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slack Great Library</title>
+  <%= csrf_meta_tags %>
+
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+</head>
+
+<body>
+<% if user_signed_in? %>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Slack Great Library</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <% menu_items.each do |menu| %>
+              <%= menuitem menu[:name], menu[:url], session[:active_tab] == menu[:url] %>
+          <% end %>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              <%= "#{current_user.name} (#{current_user.email})" %>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <% User.all.each do |user| %>
+                  <% if user != current_user %>
+                      <li> <%= link_to "#{user.name} (#{user.email})", change_user_path(user.id) %> </li>
+                  <% end %>
+              <% end %>
+            </ul>
+          </li>
+          <li>
+            <a href="<%= destroy_user_session_path %>">
+              <span class="glyphicon glyphicon-log-in"></span>
+              Выйти
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="main-page">
+      <%= yield %>
+    </div>
+<% else %>
+    <div class="login-screen">
+      <div class="login-top"></div>
+      <div class="login-body">
+        <%= yield %>
+      </div>
+    </div>
+<% end %>
+
+</body>
+</html>

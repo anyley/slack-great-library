@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Users</h1>
+
+<p>
+<%= link_to 'New User', new_user_path, class: 'btn btn-primary' %>
+</p>
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th> Name</th>
+    <th> Email</th>
+    <th> Actions</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @users.each do |user| %>
+      <tr>
+        <%= render 'user', user: user %>
+        <td>
+          <%= link_to 'Show', user, class: 'btn btn-default' %>
+          <%= link_to 'Edit', edit_user_path(user), class: 'btn btn-default' %>
+          <%= link_to 'Destroy', user, class: 'btn btn-danger', method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+

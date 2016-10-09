@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  op_type: 1
+  sum: 1
+  sender: one
+  receiver: one
+  date: 2016-10-03 04:26:19
+  uuid: MyString
+  accept: false
+
+two:
+  op_type: 1
+  sum: 1
+  sender: two
+  receiver: two
+  date: 2016-10-03 04:26:19
+  uuid: MyString
+  accept: false

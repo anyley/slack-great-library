@@ -1,0 +1,55 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require devise_bootstrap_views
+ *= require_tree .
+ *= require_self
+ */
+
+
+@import "bootstrap-sprockets"
+@import "bootstrap"
+
+.main-page
+  top: 50px
+  position: absolute
+  bottom: 0
+  width: 100%
+  overflow: hidden
+
+.devise-bs
+  box-shadow: 0 10px 50px darkgray
+
+.login-screen
+  width: 100%
+  height: 100%
+  position: absolute
+
+.login-top
+  margin: auto auto
+  min-height: 20%
+
+.login-body
+  position: relative
+  width: 350px
+  margin: 0px auto
+
+.btn-medium
+  padding: 3px 12px
+  font-size: 14px
+  margin: 1px 3px
+
+.grab
+  cursor: -webkit-grab
+
+.grabbing
+  cursor: -webkit-grabbing

@@ -1,0 +1,67 @@
+<div class="panel panel-default width-800">
+  <div class="panel-heading">
+    Введите информацию о предлагаемом продукте
+  </div>
+  <div class="panel-body">
+    <%= form_for(item) do |f| %>
+        <% if item.errors.any? %>
+            <div id="error_explanation">
+              <h2><%= pluralize(item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+              <ul>
+                <% item.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+        <% end %>
+
+        <div class="item">
+          <div class="preview-upload">
+            <img id="preview" src="#" alt="Выберете файл" class="item_image clickable">
+            <%= f.file_field :image, class: "form-control-2 hidden" %>
+          </div>
+
+          <div class="input-info">
+            <table>
+              <tr>
+                <td class="row_title cell"> <%= f.label :itemtype, 'Название:' %> </td>
+                <td class="cell">
+                  <%= f.text_field :description, placeholder: 'Agile Web Development with Rails 5', class: "form-control-2 width-max" %>
+                </td>
+              </tr>
+              <tr>
+                <td class="row_title cell"> <%= f.label :itemtype, 'Вид товара:' %> </td>
+                <td class="cell">
+                  <%= f.text_field :itemtype, placeholder: 'книга, скринкаст, подкаст, доступ к сайту...', class: "form-control-2 width-400" %>
+                </td>
+              </tr>
+              <tr>
+                <td class="row_title cell"> <%= f.label :url, 'URL:' %> </td>
+                <td class="cell">
+                  <%= f.text_field :url, placeholder: 'http://', class: "form-control-2 width-400" %>
+                </td>
+              </tr>
+              <tr>
+                <td class="row_title cell"> <%= f.label :price, 'Цена:' %> </td>
+                <td class="cell">
+                  <%= f.text_field :price, placeholder: 'без копеек...', class: "form-control-2 width-200" %>
+                </td>
+              </tr>
+              <tr>
+                <td class="row_title cell"> <%= f.label :offered_by, 'Предложил:' %> </td>
+                <td class="cell">
+                  <%= @current_user.name %>
+                  <!-- %= collection_select :item, :offered_by, users, :id, :name, class: "form-control-2" % -->
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+    <% end %>
+  </div>
+  <div class="panel-footer text-right">
+    <%= link_to 'Добавить', '#', onclick: "$('#new_item').submit()", class: "btn btn-primary" %>
+  </div>
+</div>
+

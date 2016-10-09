@@ -1,0 +1,11 @@
+<div id="our-items" class="panel panel-default">
+  <div class="panel-heading">
+    <%= link_to 'Добавить предложение', new_item_path, class: 'btn btn-default' %>
+    <div class="btn-group right-block">
+      <%= filter_buttons %>
+    </div>
+  </div>
+  <div id="main-content" class="panel-body" keep-scroll >
+    <%= render partial: 'items/item', collection: @items, locals: {current_user: @current_user} %>
+  </div>
+</div>

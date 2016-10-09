@@ -1,0 +1,96 @@
+- claims_count  = item.claimers.count - item.purchase_users.count
+- claimer_links = map_link_to (item.claimers - item.purchase_users), :name
+- median_price  = item.claimers.any? ? (item.price.to_f / item.claimers.count).ceil.to_i : item.price
+
+.item id="item_#{item.id}"
+  = image_tag image_item_path(item), class: 'item_image'
+
+  .info
+    table
+      tr
+        td.row_title.cell
+        td.cell
+          span.item-title = item.description
+            
+      tr
+        td.row_title.cell
+        td.cell
+          i = item.itemtype
+
+      tr
+        td.row_title.cell
+          strong URL:
+        td.cell
+          a href=item.url = item.url
+
+      tr
+        td.row_title.cell
+          strong Цена:
+        td.cell
+          = item.price
+          - if item.claimers.any?
+            |  по #{median_price} с каждого
+
+      tr
+        td.row_title.cell
+          strong Предложил:
+        td.cell
+          - if item.offered_user
+            = link_to item.offered_user.name, item.offered_user
+
+      tr
+        td.row_title.cell
+          strong Новые заявки:
+          - if claims_count > 0
+            td.cell
+              | #{claims_count} чел (#{claimer_links})
+          - else
+            td.cell
+              span style="color: red" нет желающих
+
+      tr
+        td.row_title.cell
+          strong Скинулись:
+          - if item.purchase_users.count > 0
+            td.cell
+              | #{item.purchase_users.count} чел
+              | (#{map_link_to item.purchase_users, :name})
+          - else
+            td.cell
+              span style="color: red" не скидывались
+
+      tr
+        td.row_title.cell
+          strong
+            - case item.users.count
+            - when 0, 1
+              | Владелец:
+            - else
+              | Владельцы:
+        td.cell
+          - if item.users.size == 0
+            span style="color: red" никто не покупал
+          - else
+            = map_link_to item.users, :name
+
+        tr
+          td.row_title.cell
+          td.cell
+            - if item.purchase_users.exists? current_user.id
+              .btn.btn-success.btn-medium.disabled Приобретено
+            - else
+              - if item.claimers.exists? current_user.id
+                = link_to 'Отозвать заявку', unclaim_item_path(item),
+                        class: 'btn btn-danger btn-medium',
+                        remote: true
+              - else
+                = link_to 'Подать заявку', claim_item_path(item),
+                        class: 'btn btn-primary btn-medium',
+                        remote: true
+
+              = link_to 'Начать сбор денег', start_crowdfunding_path(item),
+                      class: 'btn btn-primary btn-medium',
+                      remote: true
+
+              == yield(item) if block_given?
+

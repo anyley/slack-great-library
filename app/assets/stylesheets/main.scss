@@ -1,0 +1,112 @@
+// Place all the styles related to the main controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+$image_width: 180px;
+$image_height: 220px;
+
+.btn-danger {
+  color: white;
+}
+
+.row_title {
+  text-align: right;
+}
+
+.cell {
+  padding: 2px 4px;
+  vertical-align: top;
+}
+
+.item {
+  padding: 20px 6px;
+}
+
+.item-title {
+  font-size: 20px;
+  padding: 0;
+}
+
+.item_image {
+  float: left;
+  height: $image_height;
+  width: $image_width;
+
+  border-width: 1px;
+  border-style: solid;
+  border-color: lightgray;
+  box-shadow: 5px 5px 10px lightgray;
+}
+
+.preview-upload {
+  float: left;
+  width: $image_width;
+}
+
+
+.info {
+  padding: 2px 10px;
+  padding-left: 15px;
+  // overflow: overlay;
+}
+
+a {
+  background-color: transparent;
+  color: blue;
+}
+
+.right-block {
+  float: right;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.form-control-2 {
+  border: none;
+  background-color: rgba(240, 240, 240, 255);
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+}
+
+.input-info {
+  padding: 10px;
+  padding-left: 15px;
+  overflow: overlay;
+}
+
+
+.width-400 {
+  width: 400px
+}
+
+.width-200 {
+  width: 200px;
+}
+
+.width-600 {
+  width: 600px;
+}
+
+.width-700 {
+  width: 700px;
+}
+
+.width-800 {
+  width: 800px;
+}
+
+.width-max {
+  width: 100%;
+}
+
+#main-content {
+  position: absolute;
+  top: 57px;
+  overflow-y: scroll;
+  bottom: 0px;
+  width: 100%;
+}
+

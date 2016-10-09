@@ -1,0 +1,54 @@
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <th> Пользователь</th>
+    <th style="padding-left: 30px;"> Предложил </th>
+    <th style="padding-left: 30px;"> Владеет </th>
+    <th style="padding-left: 30px;"> Подал заявку на </th>
+    <th style="padding-left: 30px;"> Заплатил за </th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each_with_index do |user, idx| %>
+      <tr>
+        <td> <%= idx + 1 %>. <%= user.name %> </td>
+        <td>
+          <% if user.offers.size > 0 %>
+              <ol>
+                <% user.offers.each do |item| %>
+                    <li> <%= link_to item.description, item %> </li>
+                <% end %>
+              </ol>
+          <% end %>
+        </td>
+        <td>
+          <% if user.items.size > 0 %>
+              <ol>
+                <% user.items.each do |item| %>
+                    <li> <%= link_to item.description, item %> </li>
+                <% end %>
+              </ol>
+          <% end %>
+        </td>
+        <td>
+          <% if user.claim_items.size > 0 %>
+              <ol>
+                <% user.claim_items.each do |item| %>
+                    <li> <%= link_to item.description, item %> </li>
+                <% end %>
+              </ol>
+          <% end %>
+        </td>
+        <td>
+          <% if user.purchase_items.size > 0 %>
+              <ol>
+                <% user.purchase_items.each do |item| %>
+                    <li> <%= link_to item.description, item %> </li>
+                <% end %>
+              </ol>
+          <% end %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
