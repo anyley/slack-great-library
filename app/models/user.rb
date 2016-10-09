@@ -23,6 +23,8 @@ class User < ApplicationRecord
   has_and_belongs_to_many :campaigns
 
 
+  default_scope { order :name, :email }
+
   def set_name
     self.name = email.split('@').first
   end

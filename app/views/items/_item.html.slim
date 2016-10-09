@@ -1,28 +1,38 @@
+/ кол-во новых заявок
 - claims_count  = item.claimers.count - item.purchase_users.count
+/ список заявителей через запятую
 - claimer_links = map_link_to (item.claimers - item.purchase_users), :name
+/ средняя цена с учетом новых заявок и уже оплаченной суммы
 - median_price  = item.claimers.any? ? (item.price.to_f / item.claimers.count).ceil.to_i : item.price
 
 .item id="item_#{item.id}"
+
+  / Обложка
   = image_tag image_item_path(item), class: 'item_image'
 
   .info
     table
+
+      / Название книги или краткое описание ресурса
       tr
         td.row_title.cell
         td.cell
           span.item-title = item.description
-            
+
+      / Вид товара: книга, скринкаст, прочее
       tr
         td.row_title.cell
         td.cell
           i = item.itemtype
 
+      / Ссылка на магазин
       tr
         td.row_title.cell
           strong URL:
         td.cell
           a href=item.url = item.url
 
+      / Цена продукта на момент покупки
       tr
         td.row_title.cell
           strong Цена:
@@ -31,13 +41,15 @@
           - if item.claimers.any?
             |  по #{median_price} с каждого
 
+      / Кто добавил книгу в базу
       tr
         td.row_title.cell
           strong Предложил:
         td.cell
           - if item.offered_user
-            = link_to item.offered_user.name, item.offered_user
+            = link_to item.offered_user.name, our_users_path
 
+      / Новые заявки от людей, которые еще не покупали книгу
       tr
         td.row_title.cell
           strong Новые заявки:
@@ -48,6 +60,7 @@
             td.cell
               span style="color: red" нет желающих
 
+      / Показывает кто донатил за книгу
       tr
         td.row_title.cell
           strong Скинулись:
@@ -59,38 +72,18 @@
             td.cell
               span style="color: red" не скидывались
 
+      / Кнопки управления
       tr
-        td.row_title.cell
-          strong
-            - case item.users.count
-            - when 0, 1
-              | Владелец:
-            - else
-              | Владельцы:
+        td
         td.cell
-          - if item.users.size == 0
-            span style="color: red" никто не покупал
+          - if item.claimers.exists? current_user.id
+            = danger_button 'Отозвать заявку', unclaim_item_path(item)
           - else
-            = map_link_to item.users, :name
+            = get_button 'Подать заявку', claim_item_path(item), class: 'btn-primary'
 
-        tr
-          td.row_title.cell
-          td.cell
-            - if item.purchase_users.exists? current_user.id
-              .btn.btn-success.btn-medium.disabled Приобретено
-            - else
-              - if item.claimers.exists? current_user.id
-                = link_to 'Отозвать заявку', unclaim_item_path(item),
-                        class: 'btn btn-danger btn-medium',
-                        remote: true
-              - else
-                = link_to 'Подать заявку', claim_item_path(item),
-                        class: 'btn btn-primary btn-medium',
-                        remote: true
+          = get_button 'Начать сбор денег', start_crowdfunding_path(item), class: 'btn-primary'
+          - if item.offered_user == current_user
+            = delete_button 'Удалить', item
 
-              = link_to 'Начать сбор денег', start_crowdfunding_path(item),
-                      class: 'btn btn-primary btn-medium',
-                      remote: true
-
-              == yield(item) if block_given?
+          == yield(item) if block_given?
 

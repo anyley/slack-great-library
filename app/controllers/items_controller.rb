@@ -27,6 +27,7 @@ class ItemsController < ApplicationController
   # POST /items.json
   def create
     @item = Item.new(item_params)
+    @item.offered_user = current_user
 
     respond_to do |format|
       if @item.save
@@ -96,6 +97,5 @@ class ItemsController < ApplicationController
         .require(:item)
         .permit(:description, :url, :price, :itemtype)
         .merge(image_params || {})
-        .merge({ offered_by: current_user.id })
   end
 end
