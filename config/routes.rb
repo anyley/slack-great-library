@@ -7,10 +7,10 @@ Rails.application.routes.draw do
  # end
 
   root 'main#index'
+
   get '/our-items', to: 'main#our_items'
   get '/our-items/filter/:filter', to: 'main#set_user_filter', as: :set_user_filter
-  get '/our-items/:item_id/claim', to: 'main#claim', as: :claim_item
-  get '/our-items/:item_id/unclaim', to: 'main#unclaim', as: :unclaim_item
+  get '/our-items/:item_id/toggle_claim', to: 'main#toggle_claim', as: :toggle_claim_item
 
   get '/our-users', to: 'main#our_users'
 

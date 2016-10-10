@@ -77,9 +77,9 @@
         td
         td.cell
           - if item.claimers.exists? current_user.id
-            = danger_button 'Отозвать заявку', unclaim_item_path(item)
+            = danger_button 'Отозвать заявку', toggle_claim_item_path(item)
           - else
-            = primary_button 'Подать заявку', claim_item_path(item)
+            = primary_button 'Подать заявку', toggle_claim_item_path(item)
 
           = primary_button 'Начать сбор денег', start_crowdfunding_path(item)
 
