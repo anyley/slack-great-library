@@ -31,38 +31,18 @@ class MainController < ApplicationController
     render :index
   end
 
-  def claim
+  def toggle_claim
     item = Item.find(params[:item_id])
-
     set_items
-    unless item.claimers.exists? current_user.id
-      item.claimers << current_user
-      item.reload
-      current_user.reload
-    end
 
-    respond_to do |format|
-      format.js do
-        content = render_to_string partial: 'items/item', locals: { item: item, current_user: current_user }
-        render :replace_element, locals: {
-            selector: "#item_#{item.id}",
-            content: content,
-            location: "#{claim_item_path(params[:item_id])}"
-        }
-      end
-      format.html { render :index }
-    end
-  end
-
-  def unclaim
-    item = Item.find(params[:item_id])
-
-    set_items
     if item.claimers.exists? current_user.id
       item.claimers.delete current_user
-      item.reload
-      current_user.reload
+    else
+      item.claimers << current_user
     end
+
+    item.reload
+    current_user.reload
 
     respond_to do |format|
       format.js do
@@ -70,12 +50,13 @@ class MainController < ApplicationController
         render :replace_element, locals: {
             selector: "#item_#{item.id}",
             content: content,
-            location: "#{unclaim_item_path(params[:item_id])}"
+            location: "#{toggle_claim_item_path(params[:item_id])}"
         }
       end
       format.html { render :index }
     end
   end
+
 
   def set_user_filter
     user_filters = (params[:filter] || session[:filter] || 'all')
