@@ -29,11 +29,9 @@ class User < ApplicationRecord
   default_scope { order :name, :email }
 
   scope :list_requested, -> (item_id) do
-    where.not(
-        id: User.joins(:purchases).where(purchases: { item_id: item_id })
-    ).where(
-        id: User.joins(:claims).where(claims: { item_id: item_id })
-    )
+    joins(:purchases, :claims)
+      .where.not(purchases: { item_id: item_id })
+      .where(claims: { item_id: item_id })
   end
 
   def other_items

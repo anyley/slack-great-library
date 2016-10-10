@@ -14,11 +14,9 @@ class Item < ApplicationRecord
   default_scope { order :created_at }
 
   scope :other_items_for_user, -> (user_id) do
-    where.not(
-        id: Item.joins(:purchases).where(purchases: { user_id: user_id })
-    ).where.not(
-        id: Item.joins(:claims).where(claims: { user_id: user_id })
-    )
+    joins(:purchases, :claims)
+        .where.not(purchases: {user_id: user_id})
+        .where.not(claims: {user_id: user_id})
   end
 
   # scope :new_requests_from_user, -> (user_id) do
