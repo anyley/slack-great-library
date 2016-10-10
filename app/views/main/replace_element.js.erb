@@ -1,0 +1,5 @@
+$('<%= selector %>').replaceWith("<%= j content %>");
+
+<% unless location.nil? %>
+  window.history.pushState(null, null, '<%= location %>');
+<% end %>

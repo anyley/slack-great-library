@@ -45,17 +45,17 @@ module ApplicationHelper
   end
 
   def post_button label, path, options={}
-    new_opt = merge_button_options options, method: post
+    new_opt = merge_button_options options, method: :post
     remote_button label, path, new_opt
   end
 
   def put_button label, path, options={}
-    new_opt = merge_button_options options, method: put
+    new_opt = merge_button_options options, method: :put
     remote_button label, path, new_opt
   end
 
   def patch_button label, path, options={}
-    new_opt = merge_button_options options, method: patch
+    new_opt = merge_button_options options, method: :patch
     remote_button label, path, new_opt
   end
 

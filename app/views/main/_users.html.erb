@@ -3,7 +3,6 @@
   <tr>
     <th> Пользователь</th>
     <th style="padding-left: 30px;"> Предложил </th>
-    <th style="padding-left: 30px;"> Владеет </th>
     <th style="padding-left: 30px;"> Подал заявку на </th>
     <th style="padding-left: 30px;"> Заплатил за </th>
   </tr>
@@ -16,15 +15,6 @@
           <% if user.offers.size > 0 %>
               <ol>
                 <% user.offers.each do |item| %>
-                    <li> <%= link_to item.description, item %> </li>
-                <% end %>
-              </ol>
-          <% end %>
-        </td>
-        <td>
-          <% if user.items.size > 0 %>
-              <ol>
-                <% user.items.each do |item| %>
                     <li> <%= link_to item.description, item %> </li>
                 <% end %>
               </ol>

@@ -8,4 +8,32 @@ class Item < ApplicationRecord
 
   has_many :claims
   has_many :claimers, through: :claims, source: :user
+
+  has_many :campaigns
+
+  default_scope { order :created_at }
+
+  scope :other_items_for_user, -> (user_id) do
+    where.not(
+        id: Item.joins(:purchases).where(purchases: { user_id: user_id })
+    ).where.not(
+        id: Item.joins(:claims).where(claims: { user_id: user_id })
+    )
+  end
+
+  # scope :new_requests_from_user, -> (user_id) do
+  #   where.not(
+  #       id: Item.joins(:purchases).where(purchases: { user_id: user_id })
+  #   ).where(
+  #       id: Item.joins(:claims).where(claims: { user_id: user_id })
+  #   )
+  # end
+  #
+  # scope :new_requests, -> do
+  #   where.not(
+  #       id: Item.joins(:purchases)
+  #   ).where(
+  #       id: Item.joins(:claims)
+  #   )
+  # end
 end

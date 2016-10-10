@@ -1,7 +1,7 @@
-/ кол-во новых заявок
-- claims_count  = item.claimers.count - item.purchase_users.count
 / список заявителей через запятую
-- claimer_links = map_link_to (item.claimers - item.purchase_users), :name
+- claimer_links = map_link_to (User.list_requested item.id), :name
+/ кол-во новых заявок
+- claims_count  = User.list_requested(item.id).count
 / средняя цена с учетом новых заявок и уже оплаченной суммы
 - median_price  = item.claimers.any? ? (item.price.to_f / item.claimers.count).ceil.to_i : item.price
 
@@ -79,9 +79,10 @@
           - if item.claimers.exists? current_user.id
             = danger_button 'Отозвать заявку', unclaim_item_path(item)
           - else
-            = get_button 'Подать заявку', claim_item_path(item), class: 'btn-primary'
+            = primary_button 'Подать заявку', claim_item_path(item)
 
-          = get_button 'Начать сбор денег', start_crowdfunding_path(item), class: 'btn-primary'
+          = primary_button 'Начать сбор денег', start_crowdfunding_path(item)
+
           - if item.offered_user == current_user
             = delete_button 'Удалить', item
 
