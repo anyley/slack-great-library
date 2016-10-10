@@ -77,11 +77,11 @@
         td
         td.cell
           - if item.claimers.exists? current_user.id
-            = delete_button 'Отозвать заявку', unclaim_item_path(item)
+            = danger_button 'Отозвать заявку', unclaim_item_path(item)
           - else
-            = post_button 'Подать заявку', claim_item_path(item), class: 'btn-primary'
+            = primary_button 'Подать заявку', claim_item_path(item)
 
-          = get_button 'Начать сбор денег', start_crowdfunding_path(item), class: 'btn-primary'
+          = primary_button 'Начать сбор денег', start_crowdfunding_path(item)
 
           - if item.offered_user == current_user
             = delete_button 'Удалить', item

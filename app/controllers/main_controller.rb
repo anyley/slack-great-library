@@ -43,9 +43,12 @@ class MainController < ApplicationController
 
     respond_to do |format|
       format.js do
-        @result      = render_to_string partial: 'items/item', locals: { item: item, current_user: current_user }
-        @replace_tag = "#item_#{item.id}"
-        render 'replace_item'
+        content = render_to_string partial: 'items/item', locals: { item: item, current_user: current_user }
+        render :replace_element, locals: {
+            selector: "#item_#{item.id}",
+            content: content,
+            location: "#{claim_item_path(params[:item_id])}"
+        }
       end
       format.html { render :index }
     end
@@ -63,35 +66,56 @@ class MainController < ApplicationController
 
     respond_to do |format|
       format.js do
-        @result      = render_to_string partial: 'items/item', locals: { item: item, current_user: current_user }
-        @replace_tag = "#item_#{item.id}"
-        render 'replace_item'
+        content = render_to_string partial: 'items/item', locals: { item: item, current_user: current_user }
+        render :replace_element, locals: {
+            selector: "#item_#{item.id}",
+            content: content,
+            location: "#{unclaim_item_path(params[:item_id])}"
+        }
       end
       format.html { render :index }
     end
   end
 
   def set_user_filter
-    user_filter = params[:filter].split /[\+\-]/
+    user_filters = (params[:filter] || session[:filter] || 'all')
+                       .split( /([\+\-]+\w+)/ )
+                       .select { |i| not i.empty? }
 
-    case user_filter
+    user_filters.each do |user_filter|
+      flag = user_filter[0]
+      if flag == '+' || flag == '-'
+        user_filter = user_filter[1..-1]
+      else
+        flag = '^'
+      end
 
-      when 'all'
+      if user_filter == 'all'
         session[:filter] = Set.new FILTER_ALL
-      when 'reset'
+        break
+      elsif user_filter == 'reset'
         session[:filter] = Set.new []
-      when 'claims', 'purchased', 'other'
-        session[:filter] = session[:filter].to_set ^ [user_filter]
+        break
+      elsif ['claims', 'purchased', 'other'].include? user_filter
+        if flag == '+'
+          session[:filter] = session[:filter].to_set.add user_filter
+        else
+          session[:filter] = session[:filter].to_set.delete user_filter
+        end
+      end
     end
 
+    set_items
     respond_to do |format|
       format.js do
-        set_items
-        @result = render_to_string partial: 'main/items'
-        render 'replace_main'
+        content = render_to_string partial: 'items'
+        render :replace_element, locals: {
+            selector: '#our-items',
+            content: content,
+            location: "#{our_items_path}/filter/#{params[:filter]}"
+        }
       end
       format.html do
-        set_items
         render :index
       end
     end
@@ -109,19 +133,19 @@ class MainController < ApplicationController
 
 
   private
-    def set_items
-      user   = current_user
-      @items = []
-      if session[:filter].size == FILTER_ALL.size
-        @items = Item.all
-      else
-        @items += user.claim_items - user.purchase_items if session[:filter].include?('claims')
-        @items += user.purchase_items if session[:filter].include?('purchased')
-        @items += user.other_items if session[:filter].include?('other')
-      end
+  def set_items
+    user   = current_user
+    @items = []
+    if session[:filter].size == FILTER_ALL.size
+      @items = Item.all
+    else
+      @items += user.claim_items - user.purchase_items if session[:filter].include?('claims')
+      @items += user.purchase_items if session[:filter].include?('purchased')
+      @items += user.other_items if session[:filter].include?('other')
     end
+  end
 
-    def set_session_filter
-      session[:filter] ||= Set.new FILTER_ALL
-    end
+  def set_session_filter
+    session[:filter] ||= Set.new FILTER_ALL
+  end
 end

@@ -21,7 +21,7 @@ module MainHelper
 
     links << filter_list.map do |key, label|
       link_to label,
-              set_user_filter_path(key),
+              set_user_filter_path( "#{session[:filter].include?(key) ? '-' : '+'}#{key}" ),
               remote: true,
               class:  "btn #{ session[:filter].include?(key) ? 'btn-primary' : 'btn-default' }"
     end
